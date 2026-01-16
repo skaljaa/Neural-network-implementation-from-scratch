@@ -13,7 +13,6 @@ A comprehensive implementation of a feedforward neural network built from scratc
 - [Results](#results)
 - [NumPy vs TensorFlow Comparison](#numpy-vs-tensorflow-comparison)
 - [Key Learnings](#key-learnings)
-- [Visualizations](#visualizations)
 
 ---
 
@@ -34,11 +33,20 @@ The same task is then implemented using TensorFlow/Keras to show how deep learni
 
 ```
 .
-├── neural_network_numpy.py      # NumPy implementation (from scratch)
-├── test_numpy_network.py        # Test script for NumPy network
-├── test_tensorflow_network.py   # TensorFlow implementation & comparison
-└── README.md                    # This file
+├── n_network.py          # NumPy neural network implementation (from scratch)
+├── TestNN.ipynb          # Jupyter notebook for testing the NumPy implementation
+├── TensorflowNN.ipynb    # Jupyter notebook with TensorFlow/Keras implementation
+├── README.md             # This file
+└── .gitignore            # Git ignore configuration
 ```
+
+### File Descriptions
+
+| File | Description |
+|------|-------------|
+| `n_network.py` | Core neural network class implemented from scratch using NumPy. Contains the `NeuralNetwork` class with forward propagation, backpropagation, and gradient descent. |
+| `TestNN.ipynb` | Jupyter notebook that imports and tests the NumPy neural network on the MNIST dataset. Includes training visualization and accuracy metrics. |
+| `TensorflowNN.ipynb` | Jupyter notebook implementing the same neural network architecture using TensorFlow/Keras for comparison. |
 
 ---
 
@@ -59,7 +67,7 @@ Output Layer:   10 neurons   (Softmax activation for 10 digit classes)
 
 ## 🔧 Implementation Details
 
-### NumPy Implementation
+### NumPy Implementation (`n_network.py`)
 
 **Key Components:**
 
@@ -69,7 +77,7 @@ Output Layer:   10 neurons   (Softmax activation for 10 digit classes)
    - Softmax: For multi-class output probabilities
 
 2. **Forward Propagation**
-   ```python
+   ```
    z = W × a_prev + b
    a = activation(z)
    ```
@@ -80,7 +88,7 @@ Output Layer:   10 neurons   (Softmax activation for 10 digit classes)
    - Calculates `dW` and `db` for each layer
 
 4. **Gradient Descent**
-   ```python
+   ```
    W_new = W_old - learning_rate × dW
    b_new = b_old - learning_rate × db
    ```
@@ -89,7 +97,7 @@ Output Layer:   10 neurons   (Softmax activation for 10 digit classes)
    - Cross-entropy loss for classification
    - `L = -Σ(y × log(ŷ))`
 
-### TensorFlow Implementation
+### TensorFlow Implementation (`TensorflowNN.ipynb`)
 
 The same network in TensorFlow requires just a few lines:
 
@@ -115,29 +123,32 @@ model.fit(X_train, y_train, epochs=500)
 
 ### Prerequisites
 
-```bash
+```
 python >= 3.8
+jupyter notebook or jupyter lab
 ```
 
 ### Install Dependencies
 
 ```bash
-pip install numpy matplotlib scikit-learn tensorflow tqdm
+pip install numpy matplotlib scikit-learn tensorflow jupyter tqdm
 ```
 
-Or use pip with requirements:
+Or create a requirements.txt file with:
 
-```bash
-pip install -r requirements.txt
-```
-
-**requirements.txt:**
 ```
 numpy>=1.21.0
 matplotlib>=3.4.0
 scikit-learn>=1.0.0
 tensorflow>=2.10.0
+jupyter>=1.0.0
 tqdm>=4.62.0
+```
+
+Then install:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
@@ -146,32 +157,35 @@ tqdm>=4.62.0
 
 ### Running the NumPy Implementation
 
-```bash
-python test_numpy_network.py
-```
+1. **Start Jupyter Notebook:**
+   ```bash
+   jupyter notebook
+   ```
 
-This will:
-- Load and preprocess MNIST dataset
-- Train the neural network from scratch
-- Display training progress
-- Plot cost and accuracy curves
-- Visualize predictions
+2. **Open `TestNN.ipynb`** in your browser
+
+3. **Run all cells** to:
+   - Load and preprocess MNIST dataset
+   - Train the neural network from scratch
+   - Display training progress
+   - Plot cost and accuracy curves
+   - Visualize predictions
 
 ### Running the TensorFlow Implementation
 
-```bash
-python test_tensorflow_network.py
-```
+1. **Open `TensorflowNN.ipynb`** in Jupyter
 
-This will:
-- Train the same network using TensorFlow/Keras
-- Compare performance with NumPy version
-- Generate comparison visualizations
+2. **Run all cells** to:
+   - Train the same network using TensorFlow/Keras
+   - Compare performance with NumPy version
+   - Generate comparison visualizations
 
-### Using the Neural Network Class
+### Using the Neural Network Class Directly
+
+You can also import the neural network class in your own Python scripts:
 
 ```python
-from neural_network_numpy import NeuralNetwork
+from n_network import NeuralNetwork
 
 # Create network
 model = NeuralNetwork(
@@ -188,7 +202,7 @@ predictions = model.predict(X_test)
 # Evaluate
 accuracy = model.accuracy(X_test, y_test)
 
-# Visualize
+# Visualize training progress
 model.plot_cost()
 model.plot_accuracies()
 ```
@@ -229,7 +243,7 @@ Final Test Accuracy: 0.9521
 
 ### Code Complexity
 
-**NumPy Implementation:**
+**NumPy Implementation (`n_network.py`):**
 - ✗ ~300 lines of code
 - ✗ Manual forward/backward propagation
 - ✗ Manual gradient calculations
@@ -238,7 +252,7 @@ Final Test Accuracy: 0.9521
 - ✗ Limited to basic architectures
 - ✓ Complete understanding of internals
 
-**TensorFlow/Keras:**
+**TensorFlow/Keras (`TensorflowNN.ipynb`):**
 - ✓ ~15 lines of code
 - ✓ Everything handled automatically
 - ✓ Just define architecture
@@ -305,73 +319,26 @@ Final Test Accuracy: 0.9521
 
 ## 📈 Visualizations
 
-The project generates several visualizations:
+The notebooks generate several visualizations:
 
-### 1. Cost Curve
-Shows how the loss decreases during training.
-
-### 2. Accuracy Curves
-Displays training and test accuracy evolution, helping identify overfitting.
-
-### 3. Predictions Distribution
-Shows the distribution of predicted classes on test data.
-
-### 4. Sample Predictions
-Visualizes actual predictions on test images with correct/incorrect labels.
-
-### 5. Comparison Charts
-Side-by-side comparison of NumPy vs TensorFlow performance.
-
----
-
-## 🎯 Project Goals Achieved
-
-- ✅ Implemented complete neural network from scratch
-- ✅ Achieved competitive accuracy (95%+) on MNIST
-- ✅ Created modular, reusable code
-- ✅ Comprehensive documentation
-- ✅ Comparison with industry-standard framework
-- ✅ Educational visualizations
-
----
-
-## 🔮 Future Enhancements
-
-Possible extensions to this project:
-
-1. **More Architectures**
-   - Convolutional layers (CNNs)
-   - Recurrent layers (RNNs)
-   - Attention mechanisms
-
-2. **Optimization Improvements**
-   - Adam optimizer
-   - Learning rate scheduling
-   - Batch normalization
-   - Dropout regularization
-
-3. **Additional Features**
-   - Model saving/loading
-   - Mini-batch gradient descent
-   - Cross-validation
-   - Hyperparameter tuning
-
-4. **More Datasets**
-   - CIFAR-10 (color images)
-   - Fashion-MNIST
-   - Custom datasets
+1. **Cost Curve** - Shows how the loss decreases during training
+2. **Accuracy Curves** - Displays training and test accuracy evolution
+3. **Predictions Distribution** - Shows the distribution of predicted classes
+4. **Sample Predictions** - Visualizes actual predictions on test images
 
 ---
 
 ## 📝 Mathematical Formulas
 
 ### Forward Propagation
+
 ```
 z^[l] = W^[l] × a^[l-1] + b^[l]
 a^[l] = activation(z^[l])
 ```
 
 ### Backpropagation
+
 ```
 dZ^[l] = dA^[l] × g'(Z^[l])
 dW^[l] = (1/m) × dZ^[l] × (A^[l-1])^T
@@ -380,6 +347,7 @@ dA^[l-1] = (W^[l])^T × dZ^[l]
 ```
 
 ### Gradient Descent
+
 ```
 W^[l] := W^[l] - α × dW^[l]
 b^[l] := b^[l] - α × db^[l]
@@ -389,6 +357,17 @@ Where:
 - `α` = learning rate
 - `m` = number of training examples
 - `g'` = derivative of activation function
+
+---
+
+## 🔮 Future Enhancements
+
+Possible extensions to this project:
+
+1. **More Architectures**: Convolutional layers (CNNs), Recurrent layers (RNNs)
+2. **Optimization Improvements**: Adam optimizer, Learning rate scheduling, Batch normalization, Dropout
+3. **Additional Features**: Model saving/loading, Mini-batch gradient descent, Cross-validation
+4. **More Datasets**: CIFAR-10, Fashion-MNIST, Custom datasets
 
 ---
 
@@ -409,18 +388,6 @@ This project is open source and available for educational purposes.
 ## 👤 Author
 
 Created as a learning project to understand neural networks from first principles.
-
----
-
-## 🤝 Contributing
-
-Feel free to fork, improve, and submit pull requests!
-
----
-
-## ⭐ Star This Project
-
-If you found this helpful for learning neural networks, please give it a star!
 
 ---
 
