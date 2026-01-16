@@ -124,3 +124,57 @@ def initialize_parameters(self)->None:
         self.parameters["w"+str(i)] = np.random.randn(self.architecture[i], self.architecture[i-1]) * 0.01
         self.parameters["b"+str(i)] = np.zeros((self.architecture[i], 1))
     
+def forward(self):
+    
+    params = self.parameters
+    self.layers["a0"] = self.X
+    
+    for l in range(1,self.L-1):
+            self.layers["z" + str(l)] = np.dot(params["w" + str(l)],self.layers["a"+str(l-1)]) + params["b"+str(l)]
+            self.layers["a" + str(l)] = eval(self.activation)(self.layers["z"+str(l)])
+            assert self.layers["a"+str(l)].shape == (self.architecture[l], self.m)
+    
+    self.layers["z" + str(self.L-1)] = np.dot(params["w" + str(self.L-1)],
+               self.layers["a"+str(self.L-2)]) + params["b"+str(self.L-1)]
+    
+    
+    self.layers["a"+str(self.L-1)] = softmax(self.layers["z"+str(self.L-1)])
+    
+    self.output = self.layers["a"+str(self.L-1)]
+    
+    assert self.output.shape == (self.num_labels, self.m)
+    assert all([s for s in np.sum(self.output, axis=1)])
+    
+    cost = - np.sum(self.y * np.log(self.output + 0.000000001))
+    
+    return cost, self.layers
+
+def backpropagation(self):
+     
+    derivatives = {}
+    dZ  = self.output - self.y
+    assert dZ.shape == (self.num_labels,self.m)
+     
+    dW = np.dot(dZ, self.layers['a'+self.L-2].T)/self.m
+    db = np.sum(dZ,axis=1,keepdims=True)/self.m
+     
+    dA_prev = np.dot(self.parameters['w'+self.L-1].T,dZ)
+     
+    derivative['dW'+str(self.L-1)] = dW
+    derivative['dB'+str(self.L-1)] = db
+     
+    for i in range(self.L-2,0,-1):
+        dZ = dA_prev*derivative(self.activation,self.layers['z'+str(i)])
+        dW = i/self.m*np.dot(dZ, self.layers['z'+ str(i-1)].T)
+        db = i/self.m*np.sum(dZ,axis=1,keepdims=True)
+        if i>1:
+            dA_prev = np.dot(self.parameters['w'+str(i)].T,(dZ))
+        derivatives["dW" + str(l)] = dW
+        derivatives["db" + str(l)] = db
+        self.derivatives = derivatives
+        
+    return self.derivatives
+
+
+     
+     
